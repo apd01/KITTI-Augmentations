@@ -11,14 +11,14 @@ import numpy as np
 import random
 import cv2
 
-augmentation_choices = [
+augmentation_choices = [None,
                   'gaussian', 'localvar', 'poisson', 'salt', 'pepper', 's&p', 'speckle', 'affine', # skimage
                   'rain', 'shadow', 'flare', 'snow' # Albumentations
                   ]
 
 
 def transform_image(transform, image, scale=None, rotation=None, translation=None):
-    if transform == None:
+    if transform == None or transform == 'None':
       return image
     elif transform == 'affine':
         transform = AffineTransform(
