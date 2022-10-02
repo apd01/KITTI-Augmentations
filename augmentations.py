@@ -17,18 +17,23 @@ augmentation_choices = [None,
                   ]
 
 
-def transform_image(transform, image, scale=None, rotation=None, translation=None):
+def transform_image(transform, image, scale=None, rotation=None, shear=None):
     if transform == None or transform == 'None':
       return image
     elif transform == 'affine':
         transform = AffineTransform(
-            scale=(1.1, 1.1),
-            rotation=random.uniform(-0.05, 0.05),
-            # shear=random.uniform(-0.1, 0.1),
-            translation=(random.uniform(-0.1, 0.1), random.uniform(-0.1, 0.1)),
+            scale=scale,
+            rotation=rotation,
+            shear=shear,
+#             translation=(random.uniform(-0.1, 0.1), random.uniform(-0.1, 0.1)),
             )
-        image = warp(image.astype(np.float32), transform.inverse)
-        return image.astype(np.uint8)
+        # return images with correct data types
+        if type(image[0][0]) == np.uint16:
+            return warp(image.astype(np.float32), transform.inverse).astype(np.uint16)
+        else:
+            return warp(image.astype(np.float32), transform.inverse).astype(np.uint8)
+        
+        
     elif transform == 'gaussian' or transform == 'speckle':
         # print(f"image dype before cvtColor: {image.dtype}")
         # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
